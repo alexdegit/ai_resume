@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex | Interactive Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: A single-page application with a fixed sidebar for navigation and a main content area. This structure allows recruiters to quickly jump to sections of interest. The key update is the addition of a dedicated 'AI Assistant' section powered by the Gemini API. This section provides two tools: a cover letter generator and a job description analyzer. This interactive element is designed to showcase the candidate's ability to integrate modern AI technologies into practical applications, providing a 'wow' factor and demonstrating skills beyond a static document. -->
+    <!-- Visualization & Content Choices: 
+        1. Technical Skills: Goal=Organize -> Method=Categorized Tags (HTML/Tailwind) -> Interaction=None -> Justification=Updated to precisely match the source resume for accuracy. Allows for quick scanning.
+        2. AI Cover Letter Generator: Goal=Demonstrate/Engage -> Method=Button + Display Area (HTML/JS) -> Interaction=Click to generate text -> Justification=A direct, impressive demonstration of applying LLMs to a real-world task.
+        3. AI Job Analyzer: Goal=Demonstrate/Engage -> Method=Textarea + Button + Display Area (HTML/JS) -> Interaction=User inputs job description, clicks to get analysis -> Justification=Shows a deeper, more practical application of AI, providing real value to the recruiter and highlighting the candidate's problem-solving mindset.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
+        }
+        .nav-link.active {
+            background-color: #eef2ff;
+            color: #4338ca;
+            font-weight: 600;
+        }
+        .nav-link.active .nav-icon {
+            transform: scale(1.1);
+            color: #4f46e5;
+        }
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .ai-tool-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        }
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #FFF;
+            border-bottom-color: #4f46e5;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div id="resume-content-for-api" class="hidden">
+        Name: Alex
+        Location: Sydney, Australia
+        Email: mr.arink@gmail.com 
+        Visa: Working Holiday Visa
+
+        Professional Summary
+        Highly skilled and self-driven Frontend Developer with over 3 years of hands-on experience designing and developing modern web applications using React, JavaScript, and frontend engineering tools. Adept at building scalable component libraries, optimizing application performance, and collaborating closely with cross-functional teams. Recognized for strong problem-solving skills, rapid learning ability, and a passion for building intuitive, responsive interfaces. Recently exploring blockchain and fintech domains to broaden full-stack capabilities.
+
+        Technical Skills
+        Languages & Frameworks: JavaScript (ES6+), TypeScript, HTML5, CSS3, React, Vue.js, Node.js (Express), ECharts, Ant Design, Material UI, Bootstrap
+        Frontend Tools: Webpack, Vite, Babel, ESLint, Git, Gulp, Parcel, Rollup
+        Testing & DevOps: REST API, Axios, JSON, AJAX, Chrome DevTools
+        Version Control: Git, GitHub, SourceTree, SVN
+        AI & Productivity Tools: GitHub Copilot, ChatGPT, Cursor, Perplexity
+        Other: Shell scripting, Ubuntu, Raspberry Pi, Agile/Scrum, Component Design, SPA, Responsive Design
+
+        Work Experience
+        Frontend Team Lead — Company A, Hangzhou (Aug 2022 – Oct 2023)
+        - Designed and developed core CRM systems using React, refactoring modules such as access control, outbound calling, and customer analytics.
+        - Led the development of CRM-OPE platform enabling monitoring, call logging, line management, and top-up features with advanced data visualization.
+        - Built a reusable component library (search, table, form) and collaborated with backend to standardize data structures.
+        - Reduced feature development and integration time by 50% through component abstraction and code modularity.
+        - Fully restructured SaaS merchant order backend using React, halving code complexity and enhancing scalability.
+        - Promoted to PC Technical Lead in Aug 2023; oversaw code review, architecture design, and team best practices.
+        
+        Frontend Developer — Company B, Hangzhou (Aug 2020 – Apr 2022)
+        - Independently developed enterprise management systems managing suppliers, products, orders, and invoices.
+        - Designed and implemented an HR payroll system integrated with attendance, tax, and overtime data.
+        - Migrated legacy projects to React with Ant Design, improving maintainability and development efficiency.
+        - Maintained WeChat mini-programs ensuring cross-platform consistency and stability.
+    </div>
+
+    <div class="relative min-h-screen md:flex">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-white text-gray-800 w-full md:w-64 py-4 px-2 md:py-8 md:px-4 fixed bottom-0 md:relative md:min-h-screen border-t md:border-t-0 md:border-r border-gray-200 z-20">
+            <div class="md:sticky md:top-8">
+                <div class="text-center mb-8 hidden md:block">
+                    <h1 class="text-2xl font-bold text-gray-900">Alex</h1>
+                    <p class="text-sm text-gray-500">Resume created by AI</p>
+                </div>
+                <nav id="nav-menu" class="flex md:flex-col justify-around md:justify-start md:space-y-2">
+                    <a href="#summary" class="nav-link flex flex-col md:flex-row items-center p-2 md:p-3 rounded-lg transition-colors duration-200 hover:bg-indigo-50">
+                        <span class="nav-icon text-xl">💡</span><span class="mt-1 md:mt-0 md:ml-3 text-xs md:text-base">Summary</span>
+                    </a>
+                    <a href="#skills" class="nav-link flex flex-col md:flex-row items-center p-2 md:p-3 rounded-lg transition-colors duration-200 hover:bg-indigo-50">
+                        <span class="nav-icon text-xl">🛠️</span><span class="mt-1 md:mt-0 md:ml-3 text-xs md:text-base">Skills</span>
+                    </a>
+                    <a href="#experience" class="nav-link flex flex-col md:flex-row items-center p-2 md:p-3 rounded-lg transition-colors duration-200 hover:bg-indigo-50">
+                        <span class="nav-icon text-xl">📈</span><span class="mt-1 md:mt-0 md:ml-3 text-xs md:text-base">Experience</span>
+                    </a>
+                    <a href="#contact" class="nav-link flex flex-col md:flex-row items-center p-2 md:p-3 rounded-lg transition-colors duration-200 hover:bg-indigo-50">
+                        <span class="nav-icon text-xl">✉️</span><span class="mt-1 md:mt-0 md:ml-3 text-xs md:text-base">Contact</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 sm:p-6 md:p-10 pb-24 md:pb-10">
+            <div class="max-w-4xl mx-auto">
+                <!-- Header for Mobile -->
+                <div class="md:hidden text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">Alex</h1>
+                    <p class="text-md text-gray-500">Resume created by AI</p>
+                </div>
+
+                <section id="summary" class="mb-16 pt-8">
+                    <h2 class="section-title">Professional Summary</h2>
+                     <p class="text-lg text-gray-600 leading-relaxed">
+                        Highly skilled and self-driven Frontend Developer with over 3 years of hands-on experience designing and developing modern web applications using React, JavaScript, and frontend engineering tools. Adept at building scalable component libraries, optimizing application performance, and collaborating closely with cross-functional teams. Recognized for strong problem-solving skills, rapid learning ability, and a passion for building intuitive, responsive interfaces. Recently exploring blockchain and fintech domains to broaden full-stack capabilities.
+                    </p>
+                </section>
+
+                <section id="skills" class="mb-16 pt-8">
+                    <h2 class="section-title">Technical Skills</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">Languages & Frameworks</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">JavaScript (ES6+)</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">TypeScript</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">HTML5</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">CSS3</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">React</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">Vue.js</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">Node.js (Express)</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">ECharts</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">Ant Design</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">Material UI</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">Bootstrap</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">Frontend Tools</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-medium">Webpack</span>
+                                <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-medium">Vite</span>
+                                <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-medium">Babel</span>
+                                <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-medium">ESLint</span>
+                                <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-medium">Git</span>
+                                <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-medium">Gulp</span>
+                                <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-medium">Parcel</span>
+                                <span class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-medium">Rollup</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">Testing & DevOps</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">REST API</span>
+                                <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">Axios</span>
+                                <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">JSON</span>
+                                <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">AJAX</span>
+                                <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">Chrome DevTools</span>
+                            </div>
+                        </div>
+                         <div>
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">Version Control & Other</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">Git</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">GitHub</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">SourceTree</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">SVN</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">Agile/Scrum</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">Shell scripting</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">AI & Productivity Tools</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">GitHub Copilot</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">ChatGPT</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Perplexity</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Claude code</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Gemini cli</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="experience" class="mb-16 pt-8">
+                    <h2 class="section-title">Work Experience</h2>
+                    <div class="relative border-l-2 border-indigo-200 ml-4 space-y-10">
+                        <div class="ml-8">
+                            <span class="absolute flex items-center justify-center w-8 h-8 bg-indigo-200 rounded-full -left-4 ring-4 ring-white">
+                                👑
+                            </span>
+                            <h3 class="text-xl font-semibold text-gray-900">Frontend Team Lead</h3>
+                            <p class="text-md font-normal text-gray-600">Company A, Hangzhou</p>
+                            <time class="block mb-3 text-sm font-normal leading-none text-gray-400">Aug 2022 – Oct 2023</time>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                <li>Designed and developed core CRM systems using React, refactoring key modules.</li>
+                                <li>Led development of a CRM-OPE platform with advanced data visualization.</li>
+                                <li>Built a reusable component library, reducing feature development time by 50%.</li>
+                                <li>Restructured a SaaS backend with React, halving code complexity.</li>
+                                <li>Promoted to PC Technical Lead; oversaw code review, architecture, and team best practices.</li>
+                            </ul>
+                        </div>
+                        <div class="ml-8">
+                            <span class="absolute flex items-center justify-center w-8 h-8 bg-indigo-200 rounded-full -left-4 ring-4 ring-white">
+                                👨‍💻
+                            </span>
+                            <h3 class="text-xl font-semibold text-gray-900">Frontend Developer</h3>
+                            <p class="text-md font-normal text-gray-600">Company B, Hangzhou</p>
+                            <time class="block mb-3 text-sm font-normal leading-none text-gray-400">Aug 2020 – Apr 2022</time>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                <li>Independently developed enterprise management systems for suppliers, products, and orders.</li>
+                                <li>Designed and implemented an integrated HR payroll system.</li>
+                                <li>Migrated legacy projects to React, improving maintainability and efficiency.</li>
+                                <li>Maintained WeChat mini-programs for cross-platform stability.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="contact" class="pt-8">
+                    <h2 class="section-title">Education & Availability</h2>
+                     <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-800 mb-2">Education</h3>
+                            <p class="text-gray-700 font-medium">Bachelor of Computer Science and Technology</p>
+                            <p class="text-gray-600">Nanchang University of Science and Technology</p>
+                            <p class="text-sm text-gray-500">2016 – 2020 (Full-time, Verified on Xuexin)</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-800 mb-2">Availability & Contact</h3>
+                            <p class="text-gray-600 mb-4">Based in Sydney and available for contract, internship, or part-time roles. Actively exploring long-term career development in the Australian tech industry.</p>
+                            <a href="mailto:mr.arink@gmail.com" class="text-indigo-600 hover:text-indigo-800 font-medium transition-colors">mr.arink@gmail.com</a>
+                        </div>
+                     </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('main section');
+            const navLinks = document.querySelectorAll('#nav-menu a');
+            const resumeText = document.getElementById('resume-content-for-api').innerText;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: '0px', threshold: 0.3 });
+
+            sections.forEach(section => observer.observe(section));
+            
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
